@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-
+from .constants import MAX_LEN_TITLE
 
 User = get_user_model()
 
@@ -25,7 +25,10 @@ class PublishedAndDateTimeModel(models.Model):
 class TitleModel(models.Model):
     """Абстрактная модель, добавляет title"""
 
-    title = models.CharField(max_length=256, verbose_name='Заголовок')
+    title = models.CharField(
+        max_length=MAX_LEN_TITLE,
+        verbose_name='Заголовок'
+    )
 
     class Meta:
         abstract = True
@@ -50,7 +53,7 @@ class Category(PublishedAndDateTimeModel, TitleModel):
 
 class Location(PublishedAndDateTimeModel):
     name = models.CharField(
-        max_length=256,
+        max_length=MAX_LEN_TITLE,
         verbose_name='Название места'
     )
 
@@ -71,11 +74,13 @@ class Post(PublishedAndDateTimeModel, TitleModel):
     )
     author = models.ForeignKey(
         User,
+        related_name='post',
         on_delete=models.CASCADE,
         verbose_name='Автор публикации'
     )
     location = models.ForeignKey(
         Location,
+        related_name='post',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -83,6 +88,7 @@ class Post(PublishedAndDateTimeModel, TitleModel):
     )
     category = models.ForeignKey(
         Category,
+        related_name='post',
         on_delete=models.SET_NULL,
         null=True,
         verbose_name='Категория'
@@ -91,6 +97,7 @@ class Post(PublishedAndDateTimeModel, TitleModel):
     class Meta:
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
+        ordering = ('-pub_date',)
 
     def __str__(self) -> str:
         return self.title

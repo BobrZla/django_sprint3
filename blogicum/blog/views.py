@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone as tz
 
 from blog.models import Post, Category
+from .constants import POSTS_IN_HOMEPAGE
 
 
 def postfilter():
@@ -19,7 +20,7 @@ def postfilter():
 
 def index(request):
     template = 'blog/index.html'
-    post_list = postfilter()[:5]
+    post_list = postfilter()[:POSTS_IN_HOMEPAGE]
     context = {'post_list': post_list}
     return render(request, template, context)
 
@@ -41,6 +42,6 @@ def category_posts(request, category_slug):
         slug=category_slug,
         is_published=True
     )
-    posts = postfilter().filter(category__slug=category_slug)
+    posts = postfilter().filter(category=category)
     context = {'category': category, 'post_list': posts}
     return render(request, template, context)

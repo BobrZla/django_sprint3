@@ -3,20 +3,40 @@ from django.contrib import admin
 from .models import Category, Location, Post
 
 
-class PostInLine(admin.TabularInline):
-    model = Post
-    extra = 1
-
-
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    inlines = (
-        PostInLine,
-    )
     list_display = (
         'title',
+        'description',
+        'is_published',
+        'created_at',
+        'slug',
+    )
+    list_display_links = (
+        'title',
+    )
+    list_editable = (
+        'is_published',
+        'slug',
     )
 
 
+@admin.register(Location)
+class LocationAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+        'is_published',
+        'created_at',
+    )
+    list_display_links = (
+        'name',
+    )
+    list_editable = (
+        'is_published',
+    )
+
+
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = (
         'title',
@@ -39,7 +59,4 @@ class PostAdmin(admin.ModelAdmin):
     list_display_links = ('title',)
 
 
-admin.site.register(Post, PostAdmin)
-admin.site.register(Category)
-admin.site.register(Location)
 admin.site.empty_value_display = 'Не задано'
