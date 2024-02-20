@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+
 from .constants import MAX_LEN_TITLE
 
 User = get_user_model()
@@ -74,13 +75,13 @@ class Post(PublishedAndDateTimeModel, TitleModel):
     )
     author = models.ForeignKey(
         User,
-        related_name='post',
+        related_name='posts',
         on_delete=models.CASCADE,
         verbose_name='Автор публикации'
     )
     location = models.ForeignKey(
         Location,
-        related_name='post',
+        related_name='posts',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -88,7 +89,7 @@ class Post(PublishedAndDateTimeModel, TitleModel):
     )
     category = models.ForeignKey(
         Category,
-        related_name='post',
+        related_name='posts',
         on_delete=models.SET_NULL,
         null=True,
         verbose_name='Категория'
